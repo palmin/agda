@@ -724,11 +724,13 @@ sameQuantity = curry $ \case
 -- Right-biased for origin.
 --
 instance Semigroup Quantity where
-  Quantity1{} <> q = q           -- right-bias!
-  q <> Quantity1{} = q
-  _ <> Quantity0 o = Quantity0 o -- right-bias!
-  Quantity0 o <> _ = Quantity0 o
-  _omega <> qomega = qomega      -- right-bias!
+  Quantity1 o <> Quantity1 o' = Quantity1 (o <> o')
+  Quantity1{} <> q            = q
+  q           <> Quantity1{}  = q
+  Quantity0 o <> Quantity0 o' = Quantity0 (o <> o')
+  _           <> Quantity0 o  = Quantity0 o
+  Quantity0 o <> _            = Quantity0 o
+  Quantityω o <> Quantityω o' = Quantityω (o <> o')
 
 -- | In the absense of finite quantities besides 0, ω is the unit.
 --   Otherwise, 1 is the unit.
